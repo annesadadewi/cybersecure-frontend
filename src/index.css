@@ -1,0 +1,7 @@
+@import "tailwindcss";
+
+/* Biar font-nya nggak kaku */
+body {
+  margin: 0;
+  font-family: sans-serif;
+}

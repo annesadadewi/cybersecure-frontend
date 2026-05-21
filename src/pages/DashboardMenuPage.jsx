@@ -9,17 +9,18 @@ const dataGrafik = [
   { name: 'Jumat', jumlah: 8 }, { name: 'Sabtu', jumlah: 15 }, { name: 'Minggu', jumlah: 10 },
 ];
 
-const DashboardPage = () => (
+const DashboardPage = ({ setActiveMenu }) => (
   <div className="space-y-8 animate-fadeIn">
     <div className="grid grid-cols-3 md:grid-cols-3 gap-6">
       {[
-        { icon: Activity, text: 'Total Integrasi', val: '12 Akun', color: '#2A65E8' },
-        { icon: ShieldAlert, text: 'Anomali Terdeteksi', val: '24 Kasus', color: '#EF4444' },
-        { icon: CheckCircle, text: 'System Integrity', val: '99.9%', color: '#10B981' },
+        { icon: Activity, text: 'Total Integrasi', val: '12 Akun', color: '#2A65E8', action: () => setActiveMenu('Total Integrasi') },
+        { icon: ShieldAlert, text: 'Anomali Terdeteksi', val: '24 Kasus', color: '#EF4444', action: () => setActiveMenu('Anomali Terdeteksi') },
+        { icon: CheckCircle, text: 'System Integrity', val: '99.9%', color: '#10B981', action: () => setActiveMenu('System Integrity') },
       ].map((card, i) => (
         <div 
           key={i} 
-          className="p-6 rounded-3xl hover:scale-[1.02] transition-all flex flex-col justify-between h-44 shadow-xl border border-white/20" 
+          onClick={card.action}
+          className="p-6 rounded-3xl hover:scale-[1.02] transition-all flex flex-col justify-between h-44 shadow-xl border border-white/20 cursor-pointer" 
           style={{ backgroundColor: '#ffffff' }}
         >
           <div className="p-3 w-fit rounded-xl" style={{ backgroundColor: `${card.color}20`, color: card.color }}>

@@ -27,7 +27,6 @@ export const authService = {
         localStorage.removeItem('token');
     },
 
-    // Mendapatkan data user yang sedang login
     me: async () => {
         const response = await api.get('/user');
         return response.data;

@@ -7,6 +7,9 @@ import ReportsPage from './pages/ReportsPage';
 import MarketplacePage from './pages/MarketplacePage';
 import FeaturesPage from './pages/FeaturesPage';
 import DashboardPage from './pages/DashboardMenuPage';
+import TotalIntegrasiPage from './pages/TotalIntegrasiPage';
+import AnomaliTerdeteksiPage from './pages/AnomaliTerdeteksiPage';
+import SystemIntegrityPage from './pages/SystemIntegrityPage';
 import Sidebar from './components/Sidebar'; // Buat komponen sidebar terpisah
 import Header from './components/Header';   // Buat komponen header terpisah
 import { theme } from './Theme';
@@ -66,13 +69,16 @@ function App() {
       <main className="flex-1 flex flex-col overflow-hidden">
         <Header activeMenu={activeMenu} user={user} />
         <div className="flex-1 overflow-y-auto px-10 pb-10 pt-8">
-          {activeMenu === 'Dashboard' && <DashboardPage />}
+          {activeMenu === 'Dashboard' && <DashboardPage setActiveMenu={setActiveMenu} />}
+          {activeMenu === 'Total Integrasi' && <TotalIntegrasiPage />}
+          {activeMenu === 'Anomali Terdeteksi' && <AnomaliTerdeteksiPage />}
+          {activeMenu === 'System Integrity' && <SystemIntegrityPage />}
           {activeMenu === 'Pelajari Fitur' && <FeaturesPage />}
           {activeMenu === 'Marketplace' && <MarketplacePage />}
           {activeMenu === 'Reports' && <ReportsPage />}
           {activeMenu === 'Notifications' && <NotificationsPage />}
           {activeMenu === 'Settings' && <SettingsPage user={user} />}
-          {activeMenu !== 'Dashboard' && activeMenu !== 'Pelajari Fitur' && activeMenu !== 'Marketplace' && activeMenu !== 'Reports' && activeMenu !== 'Notifications' && activeMenu !== 'Settings' && (
+          {activeMenu !== 'Dashboard' && activeMenu !== 'Total Integrasi' && activeMenu !== 'Anomali Terdeteksi' && activeMenu !== 'System Integrity' && activeMenu !== 'Pelajari Fitur' && activeMenu !== 'Marketplace' && activeMenu !== 'Reports' && activeMenu !== 'Notifications' && activeMenu !== 'Settings' && (
             <div className="text-white opacity-50 text-center p-20">Halaman {activeMenu} dalam pengembangan</div>
           )}
         </div>

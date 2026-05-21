@@ -5,3 +5,22 @@
 body {
   font-family: 'Poppins', sans-serif;
 }
+
+/* Fix browser autofill styling for Auth inputs */
+.auth-input:-webkit-autofill,
+.auth-input:-webkit-autofill:hover, 
+.auth-input:-webkit-autofill:focus, 
+.auth-input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 30px #D5EEFF inset !important;
+    -webkit-text-fill-color: #1F5E88 !important;
+    transition: background-color 5000s ease-in-out 0s;
+}
+
+.market-input:-webkit-autofill,
+.market-input:-webkit-autofill:hover, 
+.market-input:-webkit-autofill:focus, 
+.market-input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 30px #F4FBFF inset !important;
+    -webkit-text-fill-color: #1F5E88 !important;
+    transition: background-color 5000s ease-in-out 0s;
+}

@@ -174,36 +174,37 @@ const FeaturesPage = () => {
   ];
 
   return (
-    <div className="space-y-12 animate-fadeIn relative">
+    <div className="space-y-6 sm:space-y-8 animate-fadeIn relative">
       {/* Features Grid */}
-      <div className="grid grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
         {features.map((feature, i) => (
           <div 
             key={i} 
-            className="p-8 rounded-[24px] transition-all duration-300 hover:scale-[1.03] shadow-2xl border border-white/5 group relative overflow-hidden"
-            style={{ backgroundColor: '#164E75' }}
+            className="p-6 lg:p-8 rounded-2xl lg:rounded-3xl transition-all duration-300 hover:scale-[1.02] shadow-2xl border border-white/10 group relative overflow-hidden flex flex-col justify-between min-h-[220px] cursor-pointer bg-gradient-to-b from-[#164E75] to-[#0F3957]"
           >
-            {/* Icon Container */}
-            <div 
-              className="w-20 h-20 rounded-2xl flex items-center justify-center mb-8 shadow-lg"
-              style={{ backgroundColor: feature.color }}
-            >
-              <feature.icon size={40} className="text-[#1F5E88]" strokeWidth={2} />
-            </div>
+            <div>
+              {/* Icon Container */}
+              <div 
+                className="w-14 h-14 rounded-2xl flex items-center justify-center mb-6 shadow-lg border border-white/5"
+                style={{ backgroundColor: feature.color }}
+              >
+                <feature.icon size={26} className="text-[#1F5E88]" strokeWidth={2} />
+              </div>
 
-            {/* Content */}
-            <h3 className="text-2xl font-bold text-white mb-3">{feature.title}</h3>
-            <p className="text-white/60 text-lg mb-8 leading-relaxed">
-              {feature.desc}
-            </p>
+              {/* Content */}
+              <h3 className="text-xl sm:text-2xl font-bold text-white mb-2">{feature.title}</h3>
+              <p className="text-white/60 text-sm sm:text-base leading-relaxed mb-6">
+                {feature.desc}
+              </p>
+            </div>
 
             {/* Link */}
             <div 
-              className="flex items-center gap-2 text-[#B8DDF5] font-bold text-lg cursor-pointer group-hover:translate-x-2 transition-transform"
+              className="flex items-center gap-2 text-[#B8DDF5] font-bold text-sm sm:text-base cursor-pointer group-hover:translate-x-1.5 transition-transform"
               onClick={() => setSelectedFeature(feature)}
             >
               <span>Baca Tutorial</span>
-              <ChevronRight size={20} />
+              <ChevronRight size={16} />
             </div>
           </div>
         ))}
@@ -220,48 +221,48 @@ const FeaturesPage = () => {
           
           {/* Modal Content */}
           <div 
-            className="relative w-full max-w-[95vw] lg:max-w-6xl bg-[#164E75] rounded-2xl p-6 md:p-10 shadow-2xl border border-white/10 animate-slideUp max-h-[90vh] overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none']"
+            className="relative w-full max-w-[95vw] lg:max-w-5xl bg-gradient-to-b from-[#164E75] to-[#0D2D44] rounded-2xl p-5 sm:p-8 md:p-10 shadow-2xl border border-white/10 animate-slideUp max-h-[90vh] overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none']"
           >
             {/* Close button */}
             <button 
               onClick={() => setSelectedFeature(null)}
-              className="absolute top-6 right-6 text-white/50 hover:text-white transition-colors p-2 hover:bg-white/10 rounded-full"
+              className="absolute top-4 right-4 sm:top-6 sm:right-6 text-white/50 hover:text-white transition-colors p-2 hover:bg-white/10 rounded-full cursor-pointer"
             >
-              <X size={28} />
+              <X size={24} />
             </button>
 
             {/* Header */}
-            <div className="flex items-center gap-6 mb-10">
+            <div className="flex items-center gap-4 sm:gap-6 mb-6 sm:mb-8">
               <div 
-                className="w-24 h-24 rounded-3xl flex items-center justify-center shadow-lg shrink-0"
+                className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl flex items-center justify-center shadow-lg shrink-0"
                 style={{ backgroundColor: selectedFeature.color }}
               >
-                <selectedFeature.icon size={48} className="text-[#1F5E88]" strokeWidth={2} />
+                <selectedFeature.icon size={36} className="text-[#1F5E88]" strokeWidth={2} />
               </div>
-              <div>
-                <h2 className="text-4xl font-bold text-white mb-2">{selectedFeature.title}</h2>
-                <h3 className="text-xl text-[#B8DDF5] font-medium">{selectedFeature.details.subtitle}</h3>
+              <div className="min-w-0">
+                <h2 className="text-xl sm:text-3xl font-bold text-white mb-0.5 sm:mb-1 truncate">{selectedFeature.title}</h2>
+                <h3 className="text-sm sm:text-lg text-[#B8DDF5] font-semibold truncate">{selectedFeature.details.subtitle}</h3>
               </div>
             </div>
 
             {/* Description */}
-            <p className="text-white/80 text-xl mb-12 leading-relaxed">
+            <p className="text-white/80 text-sm sm:text-base leading-relaxed mb-8">
               {selectedFeature.details.description}
             </p>
 
             {/* Sections */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 sm:gap-6">
               {selectedFeature.details.sections.map((section, idx) => (
                 <div 
                   key={idx}
-                  className="bg-[#0D3654] rounded-2xl p-4 lg:p-5 flex flex-col items-start gap-4 border border-white/5 hover:border-white/10 transition-colors h-full"
+                  className="bg-[#0D3654] rounded-2xl p-4 sm:p-5 flex flex-col items-start gap-4 border border-white/5 hover:border-white/10 transition-colors h-full"
                 >
-                  <div className="bg-[#164E75] p-4 rounded-xl shrink-0">
-                    <section.icon size={28} className="text-[#B8DDF5]" />
+                  <div className="bg-[#164E75] p-3 rounded-xl shrink-0">
+                    <section.icon size={22} className="text-[#B8DDF5]" />
                   </div>
                   <div>
-                    <h4 className="text-xl xl:text-2xl font-bold text-white mb-3">{section.title}</h4>
-                    <div className="text-white/70 leading-relaxed text-base xl:text-lg">
+                    <h4 className="text-base sm:text-lg font-bold text-white mb-2">{section.title}</h4>
+                    <div className="text-white/70 leading-relaxed text-xs sm:text-sm">
                       {section.content}
                     </div>
                   </div>
@@ -270,10 +271,10 @@ const FeaturesPage = () => {
             </div>
             
             {/* Footer / CTA */}
-            <div className="mt-12 flex justify-end">
+            <div className="mt-8 sm:mt-10 flex justify-end">
               <button 
                 onClick={() => setSelectedFeature(null)}
-                className="px-8 py-4 bg-[#B8DDF5] text-[#1F5E88] font-bold rounded-2xl hover:bg-white transition-colors shadow-lg"
+                className="px-6 py-3 bg-[#B8DDF5] text-[#1F5E88] font-bold rounded-xl hover:bg-white transition-colors shadow-lg cursor-pointer text-xs sm:text-sm"
               >
                 Tutup Tutorial
               </button>
@@ -285,5 +286,4 @@ const FeaturesPage = () => {
     </div>
   );
 };
-
 export default FeaturesPage;

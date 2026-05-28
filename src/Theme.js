@@ -16,4 +16,6 @@ export const theme = {
     textMain: '#0D2C3D',     // Teks Gelap untuk di atas Card Terang
     textLight: '#F8FAFC',    // Teks Putih untuk di atas Background Gelap
     textDim: '#64748B',      // Teks Dim untuk Subtext atau Info Tambahan
+    textCard: '#0a4261',
+    textCardcontain: '#0c618f',
 };

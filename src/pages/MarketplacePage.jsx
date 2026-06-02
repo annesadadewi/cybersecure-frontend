@@ -39,11 +39,11 @@ const MarketplacePage = () => {
       }
     } else {
       const defaults = [
-        { id: 'mail', name: 'Email Server Utama', status: 'Aktif', type: 'Mail' },
-        { id: 'db', name: 'Database Keuangan', status: 'Aktif', type: 'Database' },
-        { id: 'payment', name: 'Sistem Pembayaran (DANA, ShopeePay, Bank, dll)', status: 'Aktif', type: 'Payment' },
-        { id: 'mobile', name: 'Aplikasi Mobile', status: 'Aktif', type: 'Mobile' },
-        { id: 'web', name: 'Web Portal', status: 'Peringatan', type: 'Web' },
+        { id: 'mail', name: 'Email Server Utama', status: 'Terputus', type: 'Mail' },
+        { id: 'db', name: 'Database Keuangan', status: 'Terputus', type: 'Database' },
+        { id: 'payment', name: 'Sistem Pembayaran (DANA, ShopeePay, Bank, dll)', status: 'Terputus', type: 'Payment' },
+        { id: 'mobile', name: 'Aplikasi Mobile', status: 'Terputus', type: 'Mobile' },
+        { id: 'web', name: 'Web Portal', status: 'Terputus', type: 'Web' },
       ];
       setCoreSystems(defaults);
       localStorage.setItem('cybersecure_core_systems', JSON.stringify(defaults));

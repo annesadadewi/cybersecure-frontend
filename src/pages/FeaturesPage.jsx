@@ -27,7 +27,7 @@ const FeaturesPage = () => {
                   <li>Akses menu <strong>Pengaturan (Settings)</strong>, lalu pilih opsi <strong>Integrasi API</strong> atau <strong>Developer API</strong>.</li>
                   <li>Klik tombol <strong>Generate New Key</strong> atau <strong>Buat Kredensial Baru</strong>.</li>
                   <li>Salin <em>Client ID</em> dan <em>Client Secret</em> (API Key) yang diberikan.</li>
-                  <li>Kembali ke dashboard ini, buka menu <strong>Marketplace</strong>, dan tempelkan kunci tersebut ke kolom yang disediakan lalu simpan.</li>
+                  <li>Kembali ke dashboard ini, buka menu <strong>Manajemen Integrasi</strong> (tab Marketplace), dan tempelkan kunci tersebut ke kolom yang disediakan lalu simpan.</li>
                 </ol>
               </div>
             ),

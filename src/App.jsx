@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { authService } from './api/auth';
 import LandingPage from './pages/LandingPage';
 import LoginPage from './pages/AuthPage';
 import SettingsPage from './pages/SettingsPage';
@@ -7,9 +8,9 @@ import ReportsPage from './pages/ReportsPage';
 import ManajemenIntegrasiPage from './pages/ManajemenIntegrasiPage';
 import FeaturesPage from './pages/FeaturesPage';
 import DashboardPage from './pages/DashboardMenuPage';
-import TotalIntegrasiPage from './pages/TotalIntegrasiPage';
+import TotalIntegrasiPage from './components/dashboard/TotalIntegrasiTab';
 import AnomaliTerdeteksiPage from './pages/AnomaliTerdeteksiPage';
-import SystemIntegrityPage from './pages/SystemIntegrityPage';
+import SystemIntegrityPage from './components/dashboard/SystemIntegrityTab';
 import Sidebar from './components/Sidebar'; // Buat komponen sidebar terpisah
 import Header from './components/Header';   // Buat komponen header terpisah
 import { theme } from './Theme';
@@ -21,9 +22,42 @@ function App() {
   const [user, setUser] = useState(null);
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [booting, setBooting] = useState(true);
 
-  // Handle pindah ke dashboard
+  useEffect(() => {
+    // Migrate localStorage to version 3 (reset old default values)
+    const storageVer = localStorage.getItem('cybersecure_storage_version');
+    if (storageVer !== '3') {
+      localStorage.removeItem('cybersecure_core_systems');
+      localStorage.removeItem('cybersecure_custom_integrations');
+      localStorage.setItem('cybersecure_storage_version', '3');
+    }
+
+    const token = localStorage.getItem('token');
+    if (!token) {
+      setBooting(false);
+      return;
+    }
+    authService
+      .me()
+      .then((data) => {
+        setUser(data);
+        setIsLogin(true);
+        setAuthPage('app');
+      })
+      .catch(() => {
+        localStorage.removeItem('token');
+      })
+      .finally(() => setBooting(false));
+  }, []);
+
+  const handleUserUpdate = (profile) => {
+    setUser((prev) => ({ ...prev, ...profile }));
+  };
+
   const handleLoginSuccess = (userData) => {
+    localStorage.removeItem('cybersecure_core_systems');
+    localStorage.removeItem('cybersecure_custom_integrations');
     setUser(userData);
     setIsLogin(true);
     setAuthPage('app');
@@ -35,11 +69,29 @@ function App() {
   };
 
   // Handle sign out
-  const handleSignOut = () => {
+  const handleSignOut = async () => {
+    try {
+      await authService.logout();
+    } catch {
+      localStorage.removeItem('token');
+    }
+    localStorage.removeItem('cybersecure_core_systems');
+    localStorage.removeItem('cybersecure_custom_integrations');
     setUser(null);
     setIsLogin(false);
     setAuthPage('landing');
   };
+
+  if (booting) {
+    return (
+      <div
+        style={{ backgroundColor: theme.pageBg }}
+        className="flex h-screen items-center justify-center text-white/70 font-poppins"
+      >
+        Memuat sesi...
+      </div>
+    );
+  }
 
   // Navigasi Auth
   if (!isLogin) {
@@ -96,7 +148,9 @@ function App() {
           {activeMenu === 'Manajemen Integrasi' && <ManajemenIntegrasiPage />}
           {activeMenu === 'Reports' && <ReportsPage />}
           {activeMenu === 'Notifications' && <NotificationsPage />}
-          {activeMenu === 'Settings' && <SettingsPage user={user} />}
+          {activeMenu === 'Settings' && (
+            <SettingsPage user={user} onUserUpdate={handleUserUpdate} />
+          )}
           {activeMenu !== 'Dashboard' && activeMenu !== 'Total Integrasi' && activeMenu !== 'Anomali Terdeteksi' && activeMenu !== 'System Integrity' && activeMenu !== 'Pelajari Fitur' && activeMenu !== 'Manajemen Integrasi' && activeMenu !== 'Reports' && activeMenu !== 'Notifications' && activeMenu !== 'Settings' && (
             <div className="text-white opacity-50 text-center p-20">Halaman {activeMenu} dalam pengembangan</div>
           )}

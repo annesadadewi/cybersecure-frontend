@@ -77,16 +77,24 @@ const Sidebar = ({ theme, activeMenu, setActiveMenu, onSignOut, user, isOpen, se
         <div className="pt-4 border-t border-white/10">
           <div 
             onClick={onSignOut}
-            className="flex items-center gap-3 px-2 text-white/50 hover:text-white transition-colors cursor-pointer group"
+            className="flex items-center gap-4 px-2 py-1 text-white/60 hover:text-white transition-colors cursor-pointer group"
           >
-            <div className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center group-hover:bg-[#EF4444]/20 group-hover:text-red-400 transition-all border border-white/10">
-              <span className="text-xs font-bold uppercase">
-                {user?.name ? user.name.split(' ').map(n => n[0]).join('').substring(0, 2) : '??'}
-              </span>
+            <div className="w-11 h-11 rounded-full bg-white/10 flex items-center justify-center group-hover:bg-[#EF4444]/20 overflow-hidden transition-all border border-white/10 shrink-0 shadow-lg">
+              {user?.profile_photo_url ? (
+                <img
+                  src={user.profile_photo_url}
+                  alt=""
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <span className="text-sm font-bold uppercase">
+                  {user?.name ? user.name.split(' ').map((n) => n[0]).join('').substring(0, 2) : '??'}
+                </span>
+              )}
             </div>
             <div className="flex flex-col min-w-0">
-              <span className="text-xs font-bold truncate max-w-[120px] text-white">{user?.name || 'User'}</span>
-              <span className="text-[9px] uppercase font-bold tracking-widest text-[#69C3FF] group-hover:text-red-400 transition-colors">Sign Out</span>
+              <span className="text-sm font-bold truncate max-w-[140px] text-white tracking-wide">{user?.name || 'User'}</span>
+              <span className="text-[10px] uppercase font-bold tracking-widest text-[#69C3FF] group-hover:text-red-400 transition-colors mt-0.5">Sign Out</span>
             </div>
           </div>
         </div>

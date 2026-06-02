@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { theme } from '../Theme';
+import { theme } from '../../Theme';
 import {
   Activity, Shield, Laptop, Smartphone, Mail, Database, ShoppingBag,
   RefreshCw, X, AlertTriangle, CheckCircle, ShieldCheck, Link2, Key,
   Info, Wifi, WifiOff, PlugZap
 } from 'lucide-react';
-import { marketplaceService } from '../api/marketplace';
+import { marketplaceService } from '../../api/marketplace';
 
 const TotalIntegrasiPage = () => {
   const [coreSystems, setCoreSystems] = useState(() => {
@@ -30,11 +30,11 @@ const TotalIntegrasiPage = () => {
       }
     }
     return [
-      { id: 'mail', name: 'Email Server Utama', status: 'Aktif', type: 'Mail', icon: Mail },
-      { id: 'db', name: 'Database Keuangan', status: 'Aktif', type: 'Database', icon: Database },
-      { id: 'payment', name: 'Sistem Pembayaran (DANA, ShopeePay, Bank, dll)', status: 'Aktif', type: 'Payment', icon: Shield },
-      { id: 'mobile', name: 'Aplikasi Mobile', status: 'Aktif', type: 'Mobile', icon: Smartphone },
-      { id: 'web', name: 'Web Portal', status: 'Peringatan', type: 'Web', icon: Laptop },
+      { id: 'mail', name: 'Email Server Utama', status: 'Terputus', type: 'Mail', icon: Mail },
+      { id: 'db', name: 'Database Keuangan', status: 'Terputus', type: 'Database', icon: Database },
+      { id: 'payment', name: 'Sistem Pembayaran (DANA, ShopeePay, Bank, dll)', status: 'Terputus', type: 'Payment', icon: Shield },
+      { id: 'mobile', name: 'Aplikasi Mobile', status: 'Terputus', type: 'Mobile', icon: Smartphone },
+      { id: 'web', name: 'Web Portal', status: 'Terputus', type: 'Web', icon: Laptop },
     ];
   });
 
@@ -283,6 +283,9 @@ const TotalIntegrasiPage = () => {
   };
 
   const totalCount = integrationsList.length;
+  const activeCount = integrationsList.filter(
+    (item) => item.status === 'Aktif' || item.status === 'connected' || item.status === 'Connected'
+  ).length;
 
   const StatusBadge = ({ status, large = false }) => {
     const base = large ? 'px-4 py-1.5 text-sm' : 'px-2.5 py-0.5 text-[10px]';
@@ -320,7 +323,7 @@ const TotalIntegrasiPage = () => {
         <div>
           <h2 className="text-xl sm:text-2xl lg:text-3xl font-black text-white">Total Integrasi</h2>
           <p className="text-[#B8DDF5] text-xs sm:text-sm mt-1">
-            Detail {totalCount} akun dan sistem yang terhubung dengan pengawasan CyberSecure
+            Detail {activeCount} dari {totalCount} akun dan sistem yang aktif terhubung dengan pengawasan CyberSecure
           </p>
         </div>
       </div>

@@ -70,10 +70,14 @@ const Header = ({ activeMenu, user, onToggleSidebar }) => {
       <div className="flex items-center gap-3 sm:gap-6 text-white ml-2">
         <div className="flex items-center gap-3 sm:gap-4 border-l border-white/10 pl-3 sm:pl-6">
           <div 
-            className="w-10 h-10 lg:w-12 lg:h-12 rounded-xl flex items-center justify-center text-white font-black text-lg lg:text-xl shadow-xl border border-white/10 uppercase" 
+            className="w-10 h-10 lg:w-12 lg:h-12 rounded-xl flex items-center justify-center text-white font-black text-lg lg:text-xl shadow-xl border border-white/10 uppercase overflow-hidden shrink-0" 
             style={{ backgroundColor: theme.accent }}
           >
-            {user?.name ? user.name.split(' ').map(n => n[0]).join('').substring(0, 2) : '??'}
+            {user?.profile_photo_url ? (
+              <img src={user.profile_photo_url} alt="" className="w-full h-full object-cover" />
+            ) : (
+              user?.name ? user.name.split(' ').map(n => n[0]).join('').substring(0, 2) : '??'
+            )}
           </div>
           <div className="hidden sm:block text-left min-w-0">
             <p className="font-extrabold text-sm lg:text-base truncate max-w-[120px]">{user?.name || 'User'}</p>

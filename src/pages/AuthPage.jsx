@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { theme } from '../Theme';
-import { Shield, AtSign, Lock, Mail, ChevronLeft, Phone, Eye, EyeOff } from 'lucide-react';
+import { Shield, AtSign, Lock, Mail, Eye, EyeOff } from 'lucide-react';
 import { authService } from '../api/auth';
 import { marketplaceService } from '../api/marketplace';
 
@@ -47,8 +47,8 @@ const AuthPage = ({ mode = 'login', setAuthPage, onLogin }) => {
         setError('Nama minimal harus 3 karakter.');
         return;
       }
-      if (value.length > 75) {
-        setError('Nama maksimal 75 karakter.');
+      if (value.length > 65) {
+        setError('Nama maksimal 65 karakter.');
         return;
       }
     }
@@ -72,13 +72,23 @@ const AuthPage = ({ mode = 'login', setAuthPage, onLogin }) => {
 
     // 3. Validasi Password
     if (name === 'password') {
-      if (value.length > 0 && value.length < 3) {
-        setError('Kata sandi minimal harus 3 karakter.');
+      if (value.length > 0 && value.length < 8) {
+        setError('Kata sandi minimal harus 8 karakter.');
         return;
       }
       if (value.length > 20) {
         setError('Kata sandi maksimal 20 karakter.');
         return;
+      }
+      if (value.length >= 8) {
+        if (!/[a-z]/.test(value) || !/[A-Z]/.test(value)) {
+          setError('Kata sandi harus mengandung huruf besar & kecil.');
+          return;
+        }
+        if (!/[0-9]/.test(value) && !/[^A-Za-z0-9]/.test(value)) {
+          setError('Kata sandi harus mengandung angka atau karakter spesial.');
+          return;
+        }
       }
     }
 
@@ -122,8 +132,8 @@ const AuthPage = ({ mode = 'login', setAuthPage, onLogin }) => {
       flashError('Nama minimal harus 3 karakter.');
       return;
     }
-    if (!isLogin && formData.name.length > 75) {
-      flashError('Nama maksimal 75 karakter.');
+    if (!isLogin && formData.name.length > 65) {
+      flashError('Nama maksimal 65 karakter.');
       return;
     }
 
@@ -141,12 +151,20 @@ const AuthPage = ({ mode = 'login', setAuthPage, onLogin }) => {
       return;
     }
 
-    if (formData.password.length < 3) {
-      flashError('Kata sandi minimal harus 3 karakter.');
+    if (formData.password.length < 8) {
+      flashError('Kata sandi minimal harus 8 karakter.');
       return;
     }
     if (formData.password.length > 20) {
       flashError('Kata sandi maksimal 20 karakter.');
+      return;
+    }
+    if (!/[a-z]/.test(formData.password) || !/[A-Z]/.test(formData.password)) {
+      flashError('Kata sandi harus mengandung huruf besar & kecil.');
+      return;
+    }
+    if (!/[0-9]/.test(formData.password) && !/[^A-Za-z0-9]/.test(formData.password)) {
+      flashError('Kata sandi harus mengandung angka atau karakter spesial (@, #, $, dll.)');
       return;
     }
 
@@ -239,8 +257,20 @@ const AuthPage = ({ mode = 'login', setAuthPage, onLogin }) => {
 
   const handleForgotResetPassword = async (e) => {
     e.preventDefault();
-    if (!forgotPasswordState || forgotPasswordState.length < 3) {
-      setError('Kata sandi minimal harus 3 karakter.');
+    if (!forgotPasswordState || forgotPasswordState.length < 8) {
+      setError('Kata sandi minimal harus 8 karakter.');
+      return;
+    }
+    if (forgotPasswordState.length > 20) {
+      setError('Kata sandi maksimal 20 karakter.');
+      return;
+    }
+    if (!/[a-z]/.test(forgotPasswordState) || !/[A-Z]/.test(forgotPasswordState)) {
+      setError('Kata sandi harus mengandung huruf besar & kecil.');
+      return;
+    }
+    if (!/[0-9]/.test(forgotPasswordState) && !/[^A-Za-z0-9]/.test(forgotPasswordState)) {
+      setError('Kata sandi harus mengandung angka atau karakter spesial (@, #, $, dll.)');
       return;
     }
     if (forgotPasswordState !== forgotPasswordConfirmation) {
@@ -446,20 +476,37 @@ const AuthPage = ({ mode = 'login', setAuthPage, onLogin }) => {
                             className="auth-input bg-transparent w-full outline-none text-[#1F5E88] font-semibold text-sm placeholder:text-[#1F5E88]/50 placeholder:font-medium" 
                           />
                         </div>
-                        <div className="flex items-center bg-[#D5EEFF] rounded-xl px-4 py-3.5 gap-3 shadow-inner group focus-within:ring-2 ring-white/20 transition-all">
-                          <Lock className="text-[#1F5E88] opacity-80 shrink-0" size={20} />
-                          <input 
-                            name="password"
-                            type={showPassword ? 'text' : 'password'}
-                            value={formData.password}
-                            onChange={handleChange}
-                            placeholder="Kata Sandi" 
-                            required
-                            className="auth-input bg-transparent w-full outline-none text-[#1F5E88] font-semibold text-sm placeholder:text-[#1F5E88]/50 placeholder:font-medium" 
-                          />
-                          <button type="button" onClick={() => setShowPassword(!showPassword)} className="text-[#1F5E88] opacity-80 hover:opacity-100 transition-opacity shrink-0 cursor-pointer">
-                            {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                          </button>
+                        <div>
+                          <div className="flex items-center bg-[#D5EEFF] rounded-xl px-4 py-3.5 gap-3 shadow-inner group focus-within:ring-2 ring-white/20 transition-all">
+                            <Lock className="text-[#1F5E88] opacity-80 shrink-0" size={20} />
+                            <input 
+                              name="password"
+                              type={showPassword ? 'text' : 'password'}
+                              value={formData.password}
+                              onChange={handleChange}
+                              placeholder="Kata Sandi" 
+                              required
+                              className="auth-input bg-transparent w-full outline-none text-[#1F5E88] font-semibold text-sm placeholder:text-[#1F5E88]/50 placeholder:font-medium" 
+                            />
+                            <button type="button" onClick={() => setShowPassword(!showPassword)} className="text-[#1F5E88] opacity-80 hover:opacity-100 transition-opacity shrink-0 cursor-pointer">
+                              {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                            </button>
+                          </div>
+                          {formData.password.length > 0 && (
+                            <div className="mt-2 px-1 space-y-1">
+                              {[{ ok: formData.password.length >= 8 && formData.password.length <= 20, text: 'Minimal 8 & maksimal 20 karakter.' },
+                                { ok: /[a-z]/.test(formData.password) && /[A-Z]/.test(formData.password), text: 'Mengandung huruf besar & kecil.' },
+                                { ok: /[0-9]/.test(formData.password) || /[^A-Za-z0-9]/.test(formData.password), text: 'Mengandung angka atau karakter spesial (@, #, $, dll.)' }
+                              ].map(({ ok, text }) => (
+                                <div key={text} className={`flex items-center gap-1.5 text-xs font-semibold transition-colors duration-200 ${ok ? 'text-green-400' : 'text-white/50'}`}>
+                                  <span className={`w-3.5 h-3.5 rounded-full border flex items-center justify-center shrink-0 transition-colors duration-200 ${ok ? 'border-green-400 bg-green-400/20' : 'border-white/20'}`}>
+                                    {ok && <span className="text-green-400" style={{fontSize:'8px', fontWeight:900}}>✓</span>}
+                                  </span>
+                                  {text}
+                                </div>
+                              ))}
+                            </div>
+                          )}
                         </div>
                         <div className="flex items-center bg-[#D5EEFF] rounded-xl px-4 py-3.5 gap-3 shadow-inner group focus-within:ring-2 ring-white/20 transition-all">
                           <Lock className="text-[#1F5E88] opacity-80 shrink-0" size={20} />
@@ -598,18 +645,38 @@ const AuthPage = ({ mode = 'login', setAuthPage, onLogin }) => {
                       Buat kata sandi baru untuk mengamankan akun CyberSecure Anda.
                     </p>
                     <div className="w-full max-w-[380px] space-y-3 mb-6">
-                      <div className="flex items-center bg-[#D5EEFF] rounded-xl px-4 py-3.5 gap-3 shadow-inner">
-                        <Lock className="text-[#1F5E88] opacity-80 shrink-0" size={20} />
-                        <input 
-                          type={showPassword ? 'text' : 'password'}
-                          value={forgotPasswordState}
-                          onChange={(e) => setForgotPasswordState(e.target.value)}
-                          placeholder="Kata Sandi Baru" 
-                          required
-                          className="auth-input bg-transparent w-full outline-none text-[#1F5E88] font-semibold text-sm placeholder:text-[#1F5E88]/50 placeholder:font-medium" 
-                        />
+                      <div>
+                        <div className="flex items-center bg-[#D5EEFF] rounded-xl px-4 py-3.5 gap-3 shadow-inner group focus-within:ring-2 ring-white/20 transition-all">
+                          <Lock className="text-[#1F5E88] opacity-80 shrink-0" size={20} />
+                          <input 
+                            type={showPassword ? 'text' : 'password'}
+                            value={forgotPasswordState}
+                            onChange={(e) => setForgotPasswordState(e.target.value)}
+                            placeholder="Kata Sandi Baru" 
+                            required
+                            className="auth-input bg-transparent w-full outline-none text-[#1F5E88] font-semibold text-sm placeholder:text-[#1F5E88]/50 placeholder:font-medium" 
+                          />
+                          <button type="button" onClick={() => setShowPassword(!showPassword)} className="text-[#1F5E88] opacity-80 hover:opacity-100 transition-opacity shrink-0 cursor-pointer">
+                            {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                          </button>
+                        </div>
+                        {forgotPasswordState.length > 0 && (
+                          <div className="mt-2 px-1 space-y-1">
+                            {[{ ok: forgotPasswordState.length >= 8 && forgotPasswordState.length <= 20, text: 'Minimal 8 & maksimal 20 karakter.' },
+                              { ok: /[a-z]/.test(forgotPasswordState) && /[A-Z]/.test(forgotPasswordState), text: 'Mengandung huruf besar & kecil.' },
+                              { ok: /[0-9]/.test(forgotPasswordState) || /[^A-Za-z0-9]/.test(forgotPasswordState), text: 'Mengandung angka atau karakter spesial (@, #, $, dll.)' }
+                            ].map(({ ok, text }) => (
+                              <div key={text} className={`flex items-center gap-1.5 text-xs font-semibold transition-colors duration-200 ${ok ? 'text-green-400' : 'text-white/50'}`}>
+                                <span className={`w-3.5 h-3.5 rounded-full border flex items-center justify-center shrink-0 transition-colors duration-200 ${ok ? 'border-green-400 bg-green-400/20' : 'border-white/20'}`}>
+                                  {ok && <span className="text-green-400" style={{fontSize:'8px', fontWeight:900}}>✓</span>}
+                                </span>
+                                {text}
+                              </div>
+                            ))}
+                          </div>
+                        )}
                       </div>
-                      <div className="flex items-center bg-[#D5EEFF] rounded-xl px-4 py-3.5 gap-3 shadow-inner">
+                      <div className="flex items-center bg-[#D5EEFF] rounded-xl px-4 py-3.5 gap-3 shadow-inner group focus-within:ring-2 ring-white/20 transition-all">
                         <Lock className="text-[#1F5E88] opacity-80 shrink-0" size={20} />
                         <input 
                           type={showConfirmPassword ? 'text' : 'password'}
@@ -619,6 +686,9 @@ const AuthPage = ({ mode = 'login', setAuthPage, onLogin }) => {
                           required
                           className="auth-input bg-transparent w-full outline-none text-[#1F5E88] font-semibold text-sm placeholder:text-[#1F5E88]/50 placeholder:font-medium" 
                         />
+                        <button type="button" onClick={() => setShowConfirmPassword(!showConfirmPassword)} className="text-[#1F5E88] opacity-80 hover:opacity-100 transition-opacity shrink-0 cursor-pointer">
+                          {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                        </button>
                       </div>
                     </div>
                     <button 

@@ -27,10 +27,10 @@ function App() {
   useEffect(() => {
     // Migrate localStorage to version 3 (reset old default values)
     const storageVer = localStorage.getItem('cybersecure_storage_version');
-    if (storageVer !== '3') {
+    if (storageVer !== '4') {
       localStorage.removeItem('cybersecure_core_systems');
       localStorage.removeItem('cybersecure_custom_integrations');
-      localStorage.setItem('cybersecure_storage_version', '3');
+      localStorage.setItem('cybersecure_storage_version', '4');
     }
 
     const token = localStorage.getItem('token');

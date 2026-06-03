@@ -9,9 +9,17 @@ const getActiveParams = () => {
     if (savedCore) {
       const coreSystems = JSON.parse(savedCore);
       if (Array.isArray(coreSystems)) {
+        const typeMap = {
+          Database: 'db',
+          Mail: 'mail',
+          Payment: 'payment',
+          Web: 'web',
+          Mobile: 'mobile'
+        };
         coreSystems.forEach(sys => {
           if (sys.status === 'Aktif') {
-            params[`core_${sys.id}`] = '1';
+            const key = typeMap[sys.type] || sys.type.toLowerCase();
+            params[`core_${key}`] = '1';
           }
         });
       }

@@ -41,14 +41,14 @@ const WebTab = ({ webOptions, getSystemStatus, onConnect, onDisconnect, customId
 
               {isConnected ? (
                 <button 
-                  onClick={() => onDisconnect({ id: isCustom ? customIdByName[webOpt] : 'web', name: webOpt, type: 'Web', customTabId: isCustom ? 'web' : undefined })}
+                  onClick={() => onDisconnect({ id: isCustom ? customIdByName[webOpt] : `web-${webOpt}`, name: webOpt, type: 'Web', customTabId: isCustom ? 'web' : undefined })}
                   className="bg-red-500 hover:bg-red-600 text-white px-5 py-2 rounded-xl text-sm font-bold shadow transition-all hover:scale-105 cursor-pointer"
                 >
                   Putus
                 </button>
               ) : (
                 <button 
-                  onClick={() => onConnect({ id: isCustom ? customIdByName[webOpt] : 'web', name: webOpt, type: 'Web', customTabId: isCustom ? 'web' : undefined })}
+                  onClick={() => onConnect({ id: isCustom ? customIdByName[webOpt] : `web-${webOpt}`, name: webOpt, type: 'Web', customTabId: isCustom ? 'web' : undefined })}
                   className="bg-[#1F5E88] hover:bg-[#154666] text-white px-5 py-2 rounded-xl text-sm font-bold shadow transition-all hover:scale-105 cursor-pointer"
                 >
                   Hubungkan

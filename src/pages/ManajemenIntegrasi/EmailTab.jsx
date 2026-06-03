@@ -41,14 +41,14 @@ const EmailTab = ({ emailOptions, getSystemStatus, onConnect, onDisconnect, cust
 
               {isConnected ? (
                 <button 
-                  onClick={() => onDisconnect({ id: isCustom ? customIdByName[mailOpt] : 'mail', name: `${mailOpt} Server`, type: 'Mail', customTabId: isCustom ? 'email' : undefined })}
+                  onClick={() => onDisconnect({ id: isCustom ? customIdByName[mailOpt] : `mail-${mailOpt}`, name: `${mailOpt} Server`, type: 'Mail', customTabId: isCustom ? 'email' : undefined })}
                   className="bg-red-500 hover:bg-red-600 text-white px-5 py-2 rounded-xl text-sm font-bold shadow transition-all hover:scale-105 cursor-pointer"
                 >
                   Putus
                 </button>
               ) : (
                 <button 
-                  onClick={() => onConnect({ id: isCustom ? customIdByName[mailOpt] : 'mail', name: `${mailOpt} Server`, type: 'Mail', customTabId: isCustom ? 'email' : undefined })}
+                  onClick={() => onConnect({ id: isCustom ? customIdByName[mailOpt] : `mail-${mailOpt}`, name: `${mailOpt} Server`, type: 'Mail', customTabId: isCustom ? 'email' : undefined })}
                   className="bg-[#1F5E88] hover:bg-[#154666] text-white px-5 py-2 rounded-xl text-sm font-bold shadow transition-all hover:scale-105 cursor-pointer"
                 >
                   Hubungkan

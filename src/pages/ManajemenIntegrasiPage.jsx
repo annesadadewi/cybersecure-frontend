@@ -57,11 +57,32 @@ const ManajemenIntegrasiPage = () => {
       }
     } else {
       const defaults = [
-        { id: 'mail', name: 'Email Server Utama', status: 'Terputus', type: 'Mail' },
-        { id: 'db', name: 'Database Keuangan', status: 'Terputus', type: 'Database' },
-        { id: 'payment', name: 'Sistem Pembayaran (DANA, ShopeePay, Bank, dll)', status: 'Terputus', type: 'Payment' },
         { id: 'mobile', name: 'Aplikasi Mobile', status: 'Terputus', type: 'Mobile' },
-        { id: 'web', name: 'Web Portal', status: 'Terputus', type: 'Web' },
+        
+        // Databases
+        { id: 'db-PostgreSQL', name: 'PostgreSQL Database', status: 'Terputus', type: 'Database' },
+        { id: 'db-MySQL', name: 'MySQL Database', status: 'Terputus', type: 'Database' },
+        { id: 'db-SQL Server', name: 'SQL Server Database', status: 'Terputus', type: 'Database' },
+        { id: 'db-Oracle', name: 'Oracle Database', status: 'Terputus', type: 'Database' },
+
+        // Payments
+        { id: 'payment-Midtrans', name: 'Midtrans Gateway', status: 'Terputus', type: 'Payment' },
+        { id: 'payment-Xendit', name: 'Xendit Gateway', status: 'Terputus', type: 'Payment' },
+        { id: 'payment-DANA', name: 'DANA Gateway', status: 'Terputus', type: 'Payment' },
+        { id: 'payment-ShopeePay', name: 'ShopeePay Gateway', status: 'Terputus', type: 'Payment' },
+        { id: 'payment-Bank API', name: 'Bank API Gateway', status: 'Terputus', type: 'Payment' },
+
+        // Email Servers
+        { id: 'mail-Gmail SMTP', name: 'Gmail SMTP Server', status: 'Terputus', type: 'Mail' },
+        { id: 'mail-Outlook SMTP', name: 'Outlook SMTP Server', status: 'Terputus', type: 'Mail' },
+        { id: 'mail-SendGrid', name: 'SendGrid Server', status: 'Terputus', type: 'Mail' },
+        { id: 'mail-Mailchimp', name: 'Mailchimp Server', status: 'Terputus', type: 'Mail' },
+
+        // Web Portals
+        { id: 'web-Nginx Server', name: 'Nginx Server', status: 'Terputus', type: 'Web' },
+        { id: 'web-Apache Server', name: 'Apache Server', status: 'Terputus', type: 'Web' },
+        { id: 'web-IIS Server', name: 'IIS Server', status: 'Terputus', type: 'Web' },
+        { id: 'web-Cloudflare', name: 'Cloudflare Server', status: 'Terputus', type: 'Web' },
       ];
       setCoreSystems(defaults);
       localStorage.setItem('cybersecure_core_systems', JSON.stringify(defaults));
@@ -395,7 +416,7 @@ const ManajemenIntegrasiPage = () => {
             getSystemStatus={(idOrName) => {
               const match = customIntegrations.database.find((it) => it.name === idOrName);
               if (match) return match.status;
-              return getSystemStatus('db');
+              return getSystemStatus(`db-${idOrName}`);
             }}
             customIdByName={Object.fromEntries(customIntegrations.database.map((it) => [it.name, it.id]))}
             onConnect={setConnectItem}
@@ -411,7 +432,7 @@ const ManajemenIntegrasiPage = () => {
             getSystemStatus={(idOrName) => {
               const match = customIntegrations.payment.find((it) => it.name === idOrName);
               if (match) return match.status;
-              return getSystemStatus('payment');
+              return getSystemStatus(`payment-${idOrName}`);
             }}
             customIdByName={Object.fromEntries(customIntegrations.payment.map((it) => [it.name, it.id]))}
             onConnect={setConnectItem}
@@ -427,7 +448,7 @@ const ManajemenIntegrasiPage = () => {
             getSystemStatus={(idOrName) => {
               const match = customIntegrations.email.find((it) => it.name === idOrName);
               if (match) return match.status;
-              return getSystemStatus('mail');
+              return getSystemStatus(`mail-${idOrName}`);
             }}
             customIdByName={Object.fromEntries(customIntegrations.email.map((it) => [it.name, it.id]))}
             onConnect={setConnectItem}
@@ -443,7 +464,7 @@ const ManajemenIntegrasiPage = () => {
             getSystemStatus={(idOrName) => {
               const match = customIntegrations.web.find((it) => it.name === idOrName);
               if (match) return match.status;
-              return getSystemStatus('web');
+              return getSystemStatus(`web-${idOrName}`);
             }}
             customIdByName={Object.fromEntries(customIntegrations.web.map((it) => [it.name, it.id]))}
             onConnect={setConnectItem}

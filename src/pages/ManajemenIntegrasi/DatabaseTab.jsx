@@ -41,14 +41,14 @@ const DatabaseTab = ({ databaseOptions, getSystemStatus, onConnect, onDisconnect
 
               {isConnected ? (
                 <button 
-                  onClick={() => onDisconnect({ id: isCustom ? customIdByName[dbOpt] : 'db', name: `${dbOpt} Database`, type: 'Database', customTabId: isCustom ? 'database' : undefined })}
+                  onClick={() => onDisconnect({ id: isCustom ? customIdByName[dbOpt] : `db-${dbOpt}`, name: `${dbOpt} Database`, type: 'Database', customTabId: isCustom ? 'database' : undefined })}
                   className="bg-red-500 hover:bg-red-600 text-white px-5 py-2 rounded-xl text-sm font-bold shadow transition-all hover:scale-105 cursor-pointer"
                 >
                   Putus
                 </button>
               ) : (
                 <button 
-                  onClick={() => onConnect({ id: isCustom ? customIdByName[dbOpt] : 'db', name: `${dbOpt} Database`, type: 'Database', customTabId: isCustom ? 'database' : undefined })}
+                  onClick={() => onConnect({ id: isCustom ? customIdByName[dbOpt] : `db-${dbOpt}`, name: `${dbOpt} Database`, type: 'Database', customTabId: isCustom ? 'database' : undefined })}
                   className="bg-[#1F5E88] hover:bg-[#154666] text-white px-5 py-2 rounded-xl text-sm font-bold shadow transition-all hover:scale-105 cursor-pointer"
                 >
                   Hubungkan

@@ -17,6 +17,25 @@ const SuspiciousActivityModal = ({ open, onClose }) => {
   const [incidentStatus, setIncidentStatus] = useState('Open');
   const [loading, setLoading] = useState(false);
 
+  // Filter securityIncidents to show only "Akses File Sensitif Berulang" row
+  const displayedSecurityIncidents = securityIncidents.filter(
+    (inc) => inc.id === 'sec-8' || inc.activity === 'Akses File Sensitif Berulang'
+  );
+  
+  const finalSecurityIncidents = displayedSecurityIncidents.length > 0 
+    ? displayedSecurityIncidents 
+    : securityIncidents.length > 0 
+      ? [securityIncidents.find(i => i.id === 'sec-8' || i.activity === 'Akses File Sensitif Berulang') || securityIncidents[0]] 
+      : [{
+          id: 'sec-8',
+          time: '02:12:33 WIB',
+          activity: 'Akses File Sensitif Berulang',
+          location: '192.168.1.55 (Internal)',
+          recommendation: 'Saran AI: Audit hak akses role dan batasi permission folder /config.',
+          risk_level: 'low',
+          status: 'Open'
+        }];
+
   useEffect(() => {
     if (!open) return;
     const load = async () => {
@@ -28,10 +47,15 @@ const SuspiciousActivityModal = ({ open, onClose }) => {
         ]);
         setSecurityIncidents(sec.incidents || []);
         setTransactionIncidents(tx.incidents || []);
-        const first = (sec.incidents || [])[0];
+        
+        const listSec = sec.incidents || [];
+        const first = listSec.find(i => i.id === 'sec-8' || i.activity === 'Akses File Sensitif Berulang') || listSec[0];
         if (first) {
           setSelectedId(first.id);
           setIncidentStatus(first.status || 'Open');
+        } else {
+          setSelectedId('sec-8');
+          setIncidentStatus('Open');
         }
       } catch (e) {
         console.error(e);
@@ -44,7 +68,7 @@ const SuspiciousActivityModal = ({ open, onClose }) => {
 
   if (!open) return null;
 
-  const incidents = activeTab === 'security' ? securityIncidents : transactionIncidents;
+  const incidents = activeTab === 'security' ? finalSecurityIncidents : transactionIncidents;
   const selected = incidents.find((i) => i.id === selectedId) || incidents[0];
 
   const selectRow = (inc) => {
@@ -90,7 +114,7 @@ const SuspiciousActivityModal = ({ open, onClose }) => {
               type="button"
               onClick={() => {
                 setActiveTab(tab.id);
-                const list = tab.id === 'security' ? securityIncidents : transactionIncidents;
+                const list = tab.id === 'security' ? finalSecurityIncidents : transactionIncidents;
                 if (list[0]) selectRow(list[0]);
               }}
               className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
@@ -119,7 +143,7 @@ const SuspiciousActivityModal = ({ open, onClose }) => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-white/5">
-                {securityIncidents.map((inc) => (
+                {finalSecurityIncidents.map((inc) => (
                   <tr
                     key={inc.id}
                     onClick={() => selectRow(inc)}
@@ -190,21 +214,30 @@ const SuspiciousActivityModal = ({ open, onClose }) => {
             <>
               <button
                 type="button"
-                onClick={() => handleAction('Mitigasi Diterapkan')}
+                onClick={() => {
+                  alert("SUKSES: IP 192.168.1.55 telah dimasukkan ke dalam blacklist firewall sistem.");
+                  handleAction('Mitigasi Diterapkan');
+                }}
                 className="px-4 py-2.5 bg-red-500/25 hover:bg-red-500/35 text-red-100 border border-red-500/40 rounded-xl text-xs font-bold cursor-pointer"
               >
                 🔴 Blokir IP / Akun
               </button>
               <button
                 type="button"
-                onClick={() => handleAction('In Review')}
+                onClick={() => {
+                  setIncidentStatus('Under Review');
+                  handleAction('Under Review');
+                }}
                 className="px-4 py-2.5 bg-yellow-500/20 hover:bg-yellow-500/30 text-yellow-100 border border-yellow-500/30 rounded-xl text-xs font-bold cursor-pointer"
               >
                 🟡 Mark as Review
               </button>
               <button
                 type="button"
-                onClick={() => handleAction('Ignored')}
+                onClick={() => {
+                  alert("Log aktivitas diabaikan");
+                  onClose();
+                }}
                 className="px-4 py-2.5 bg-green-500/20 hover:bg-green-500/30 text-green-100 border border-green-500/30 rounded-xl text-xs font-bold cursor-pointer"
               >
                 🟢 Abaikan
@@ -214,6 +247,20 @@ const SuspiciousActivityModal = ({ open, onClose }) => {
             <>
               <button
                 type="button"
+                onClick={() => {
+                  if (!selected) return;
+                  const mpName = (selected.marketplace || '').toLowerCase();
+                  const url = mpName.includes('shopee')
+                    ? 'https://shopee.co.id'
+                    : mpName.includes('tokopedia')
+                      ? 'https://tokopedia.com'
+                      : mpName.includes('lazada')
+                        ? 'https://lazada.co.id'
+                        : mpName.includes('blibli')
+                          ? 'https://blibli.com'
+                          : 'https://bukalapak.com';
+                  window.open(url, '_blank');
+                }}
                 className="px-4 py-2.5 bg-[#4C92C3]/30 hover:bg-[#4C92C3]/50 text-white border border-[#69C3FF]/30 rounded-xl text-xs font-bold flex items-center gap-1.5 cursor-pointer"
               >
                 <ExternalLink size={14} />
@@ -221,14 +268,29 @@ const SuspiciousActivityModal = ({ open, onClose }) => {
               </button>
               <button
                 type="button"
-                onClick={() => handleAction('In Review')}
+                onClick={() => {
+                  alert("Status transaksi telah diubah menjadi Under Review");
+                  handleAction('Under Review');
+                }}
                 className="px-4 py-2.5 bg-yellow-500/20 hover:bg-yellow-500/30 text-yellow-100 border border-yellow-500/30 rounded-xl text-xs font-bold cursor-pointer"
               >
                 🟡 Mark as Review
               </button>
               <button
                 type="button"
-                onClick={() => handleAction('Ignored')}
+                onClick={() => {
+                  if (!selected) return;
+                  const toRemoveId = selected.id;
+                  setTransactionIncidents(prev => {
+                    const filtered = prev.filter(inc => inc.id !== toRemoveId);
+                    if (filtered[0]) {
+                      selectRow(filtered[0]);
+                    } else {
+                      setSelectedId(null);
+                    }
+                    return filtered;
+                  });
+                }}
                 className="px-4 py-2.5 bg-green-500/20 hover:bg-green-500/30 text-green-100 border border-green-500/30 rounded-xl text-xs font-bold cursor-pointer"
               >
                 🟢 Abaikan

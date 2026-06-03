@@ -15,13 +15,8 @@ const TotalIntegrasiPage = () => {
         const parsed = JSON.parse(saved);
         const iconMap = { Mail, Database, Shield, Smartphone, Laptop };
         return parsed.map(item => {
-          let updatedName = item.name;
-          if (item.id === 'payment') {
-            updatedName = 'Sistem Pembayaran (DANA, ShopeePay, Bank, dll)';
-          }
           return {
             ...item,
-            name: updatedName,
             icon: iconMap[item.type] || Laptop
           };
         });
@@ -30,11 +25,32 @@ const TotalIntegrasiPage = () => {
       }
     }
     return [
-      { id: 'mail', name: 'Email Server Utama', status: 'Terputus', type: 'Mail', icon: Mail },
-      { id: 'db', name: 'Database Keuangan', status: 'Terputus', type: 'Database', icon: Database },
-      { id: 'payment', name: 'Sistem Pembayaran (DANA, ShopeePay, Bank, dll)', status: 'Terputus', type: 'Payment', icon: Shield },
       { id: 'mobile', name: 'Aplikasi Mobile', status: 'Terputus', type: 'Mobile', icon: Smartphone },
-      { id: 'web', name: 'Web Portal', status: 'Terputus', type: 'Web', icon: Laptop },
+      
+      // Databases
+      { id: 'db-PostgreSQL', name: 'PostgreSQL Database', status: 'Terputus', type: 'Database', icon: Database },
+      { id: 'db-MySQL', name: 'MySQL Database', status: 'Terputus', type: 'Database', icon: Database },
+      { id: 'db-SQL Server', name: 'SQL Server Database', status: 'Terputus', type: 'Database', icon: Database },
+      { id: 'db-Oracle', name: 'Oracle Database', status: 'Terputus', type: 'Database', icon: Database },
+
+      // Payments
+      { id: 'payment-Midtrans', name: 'Midtrans Gateway', status: 'Terputus', type: 'Payment', icon: Shield },
+      { id: 'payment-Xendit', name: 'Xendit Gateway', status: 'Terputus', type: 'Payment', icon: Shield },
+      { id: 'payment-DANA', name: 'DANA Gateway', status: 'Terputus', type: 'Payment', icon: Shield },
+      { id: 'payment-ShopeePay', name: 'ShopeePay Gateway', status: 'Terputus', type: 'Payment', icon: Shield },
+      { id: 'payment-Bank API', name: 'Bank API Gateway', status: 'Terputus', type: 'Payment', icon: Shield },
+
+      // Email Servers
+      { id: 'mail-Gmail SMTP', name: 'Gmail SMTP Server', status: 'Terputus', type: 'Mail', icon: Mail },
+      { id: 'mail-Outlook SMTP', name: 'Outlook SMTP Server', status: 'Terputus', type: 'Mail', icon: Mail },
+      { id: 'mail-SendGrid', name: 'SendGrid Server', status: 'Terputus', type: 'Mail', icon: Mail },
+      { id: 'mail-Mailchimp', name: 'Mailchimp Server', status: 'Terputus', type: 'Mail', icon: Mail },
+
+      // Web Portals
+      { id: 'web-Nginx Server', name: 'Nginx Server', status: 'Terputus', type: 'Web', icon: Laptop },
+      { id: 'web-Apache Server', name: 'Apache Server', status: 'Terputus', type: 'Web', icon: Laptop },
+      { id: 'web-IIS Server', name: 'IIS Server', status: 'Terputus', type: 'Web', icon: Laptop },
+      { id: 'web-Cloudflare', name: 'Cloudflare Server', status: 'Terputus', type: 'Web', icon: Laptop },
     ];
   });
 
@@ -415,315 +431,115 @@ const TotalIntegrasiPage = () => {
                 </div>
               )}
 
-              {/* ─── CHOOSE VIEW BY TYPE ─── */}
-              {selectedIntegration.type === 'Marketplace' ? (
-                <div className="space-y-5">
-                  {/* Status Banner - full width */}
-                  {selectedIntegration.status === 'Aktif' ? (
-                    <div className="p-4 bg-green-500/10 border border-green-500/25 rounded-2xl flex items-start gap-3">
-                      <ShieldCheck className="text-green-400 shrink-0 mt-0.5" size={22} />
-                      <div>
-                        <span className="text-sm text-green-300 font-bold block">Status Koneksi: Aktif &amp; Aman</span>
-                        <span className="text-xs text-green-200/80 mt-0.5 block leading-relaxed">
-                          Sistem memantau dan menyinkronkan data dari marketplace ini secara real-time dengan enkripsi SSL 256-bit.
-                        </span>
-                      </div>
+              {/* ─── SHOW HISTORY VIEW FOR ALL INTEGRATION TYPES ─── */}
+              <div className="space-y-5">
+                {/* Status Banner - full width */}
+                {selectedIntegration.status === 'Aktif' ? (
+                  <div className="p-4 bg-green-500/10 border border-green-500/25 rounded-2xl flex items-start gap-3">
+                    <ShieldCheck className="text-green-400 shrink-0 mt-0.5" size={22} />
+                    <div>
+                      <span className="text-sm text-green-300 font-bold block">Status Koneksi: Aktif &amp; Aman</span>
+                      <span className="text-xs text-green-200/80 mt-0.5 block leading-relaxed">
+                        Sistem memantau dan menyinkronkan data dari {selectedIntegration.type === 'Marketplace' ? 'marketplace' : 'sistem'} ini secara real-time dengan enkripsi SSL 256-bit.
+                      </span>
                     </div>
-                  ) : (
-                    <div className="p-4 bg-red-500/10 border border-red-500/20 rounded-2xl flex items-start gap-3">
-                      <WifiOff className="text-red-400 shrink-0 mt-0.5" size={22} />
-                      <div>
-                        <span className="text-sm text-red-300 font-bold block">Status Koneksi: Terputus</span>
-                        <span className="text-xs text-red-200/80 mt-0.5 block leading-relaxed">
-                          Integrasi ini dinonaktifkan sementara. Riwayat audit dan pencatatan transaksi sebelumnya tetap disimpan aman untuk kepatuhan.
-                        </span>
-                      </div>
+                  </div>
+                ) : (
+                  <div className="p-4 bg-red-500/10 border border-red-500/20 rounded-2xl flex items-start gap-3">
+                    <WifiOff className="text-red-400 shrink-0 mt-0.5" size={22} />
+                    <div>
+                      <span className="text-sm text-red-300 font-bold block">Status Koneksi: Terputus</span>
+                      <span className="text-xs text-red-200/80 mt-0.5 block leading-relaxed">
+                        Integrasi ini dinonaktifkan sementara. Riwayat audit dan pencatatan transaksi sebelumnya tetap disimpan aman untuk kepatuhan.
+                      </span>
                     </div>
-                  )}
+                  </div>
+                )}
 
-                  {/* ── 2 Column Layout ── */}
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
-                    {/* Left Column: Audit Log Table */}
-                    <div className="space-y-5">
-                      <div className="bg-white/5 border border-white/8 rounded-2xl overflow-hidden">
-                        <div className="px-5 py-3 bg-white/5 border-b border-white/10 text-xs font-bold text-[#B8DDF5] tracking-wide uppercase">
-                          Informasi Log &amp; Riwayat Audit
-                        </div>
-                        {[
-                          { label: 'Waktu Otorisasi Awal', value: selectedIntegration.initialConnected, valueClass: 'text-white font-mono text-xs' },
-                          { label: 'Waktu Koneksi Terakhir', value: selectedIntegration.lastConnected, valueClass: 'text-white font-mono text-xs' },
-                          { label: 'Metode Integrasi', value: 'API Secure Client (Restful)', valueClass: 'text-gray-300 font-mono text-xs' },
-                          { label: 'Status Saat Ini', value: selectedIntegration.status === 'Aktif' ? 'Terhubung (Aktif)' : 'Terputus (Inaktif)', valueClass: selectedIntegration.status === 'Aktif' ? 'text-green-400 font-bold' : 'text-red-400 font-bold' },
-                        ].map((row, idx, arr) => (
-                          <div
-                            key={row.label}
-                            className={`flex justify-between items-center px-5 py-3 text-sm ${idx < arr.length - 1 ? 'border-b border-white/5' : ''}`}
-                          >
-                            <span className="text-gray-400 text-xs">{row.label}</span>
-                            <span className={row.valueClass}>{row.value}</span>
-                          </div>
-                        ))}
+                {/* ── 2 Column Layout ── */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+                  {/* Left Column: Audit Log Table */}
+                  <div className="space-y-5">
+                    <div className="bg-white/5 border border-white/8 rounded-2xl overflow-hidden">
+                      <div className="px-5 py-3 bg-white/5 border-b border-white/10 text-xs font-bold text-[#B8DDF5] tracking-wide uppercase">
+                        Informasi Log &amp; Riwayat Audit
                       </div>
-
-                      {/* Connection Stats Row */}
-                      <div className="grid grid-cols-2 gap-4">
-                        <div className="p-4 bg-white/5 border border-white/5 rounded-2xl text-center">
-                          <span className="text-[10px] uppercase font-bold text-gray-400 tracking-wider block mb-1">Jumlah Terhubung</span>
-                          <span className="text-2xl font-black text-[#B8DDF5]">{selectedIntegration.connectCount}</span>
-                          <span className="text-[10px] text-gray-500 block mt-1">Sesi Sukses</span>
+                      {[
+                        { label: 'Waktu Otorisasi Awal', value: selectedIntegration.initialConnected, valueClass: 'text-white font-mono text-xs' },
+                        { label: 'Waktu Koneksi Terakhir', value: selectedIntegration.lastConnected, valueClass: 'text-white font-mono text-xs' },
+                        { label: 'Metode Integrasi', value: 'API Secure Client (Restful)', valueClass: 'text-gray-300 font-mono text-xs' },
+                        { label: 'Status Saat Ini', value: selectedIntegration.status === 'Aktif' ? 'Terhubung (Aktif)' : 'Terputus (Inaktif)', valueClass: selectedIntegration.status === 'Aktif' ? 'text-green-400 font-bold' : 'text-red-400 font-bold' },
+                      ].map((row, idx, arr) => (
+                        <div
+                          key={row.label}
+                          className={`flex justify-between items-center px-5 py-3 text-sm ${idx < arr.length - 1 ? 'border-b border-white/5' : ''}`}
+                        >
+                          <span className="text-gray-400 text-xs">{row.label}</span>
+                          <span className={row.valueClass}>{row.value}</span>
                         </div>
-                        <div className="p-4 bg-white/5 border border-white/5 rounded-2xl text-center">
-                          <span className="text-[10px] uppercase font-bold text-gray-400 tracking-wider block mb-1">Jumlah Diputus</span>
-                          <span className="text-2xl font-black text-red-300">{selectedIntegration.disconnectCount}</span>
-                          <span className="text-[10px] text-gray-500 block mt-1">Manual / Session Expired</span>
-                        </div>
-                      </div>
+                      ))}
                     </div>
 
-                    {/* Right Column: Activity Timeline */}
-                    <div className="space-y-5">
-                      <div className="p-5 bg-white/5 border border-white/5 rounded-2xl space-y-4 h-full">
-                        <span className="text-xs font-bold text-[#B8DDF5] tracking-wider uppercase block">Linimasa Aktivitas Terakhir</span>
-                        <div className="relative pl-6 border-l border-white/10 space-y-5">
-                          {selectedIntegration.status === 'Aktif' && (
-                            <div className="relative">
-                              <div className="absolute -left-[30px] top-1.5 w-2 h-2 rounded-full bg-green-400 border border-green-400/50 shadow-[0_0_10px_rgba(74,222,128,0.5)]" />
-                              <span className="text-xs font-bold text-green-300 block">Koneksi Dipulihkan</span>
-                              <span className="text-[10px] text-gray-400 block mt-0.5">{selectedIntegration.lastConnected}</span>
-                            </div>
-                          )}
-                          
-                          <div className="relative">
-                            <div className="absolute -left-[30px] top-1.5 w-2 h-2 rounded-full bg-red-400 border border-red-400/50 shadow-[0_0_10px_rgba(248,113,113,0.5)]" />
-                            <span className="text-xs font-bold text-red-300 block">Koneksi Diputuskan oleh User</span>
-                            <span className="text-[10px] text-gray-400 block mt-0.5">
-                              {selectedIntegration.status === 'Aktif' 
-                                ? 'Beberapa hari sebelum koneksi dipulihkan' 
-                                : selectedIntegration.lastConnected !== 'Terputus' 
-                                  ? selectedIntegration.lastConnected 
-                                  : 'Riwayat Audit Terakhir'}
-                            </span>
-                          </div>
-
-                          <div className="relative">
-                            <div className="absolute -left-[30px] top-1.5 w-2 h-2 rounded-full bg-green-400" />
-                            <span className="text-xs font-bold text-gray-300 block">Integrasi Awal Dikonfigurasi</span>
-                            <span className="text-[10px] text-gray-400 block mt-0.5">{selectedIntegration.initialConnected}</span>
-                          </div>
-                        </div>
+                    {/* Connection Stats Row */}
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="p-4 bg-white/5 border border-white/5 rounded-2xl text-center">
+                        <span className="text-[10px] uppercase font-bold text-gray-400 tracking-wider block mb-1">Jumlah Terhubung</span>
+                        <span className="text-2xl font-black text-[#B8DDF5]">{selectedIntegration.connectCount}</span>
+                        <span className="text-[10px] text-gray-500 block mt-1">Sesi Sukses</span>
+                      </div>
+                      <div className="p-4 bg-white/5 border border-white/5 rounded-2xl text-center">
+                        <span className="text-[10px] uppercase font-bold text-gray-400 tracking-wider block mb-1">Jumlah Diputus</span>
+                        <span className="text-2xl font-black text-red-300">{selectedIntegration.disconnectCount}</span>
+                        <span className="text-[10px] text-gray-500 block mt-1">Manual / Session Expired</span>
                       </div>
                     </div>
                   </div>
 
-                  {/* Close Action - full width */}
-                  <div className="pt-4 border-t border-white/10 flex justify-end">
-                    <button
-                      onClick={closeModal}
-                      className="px-6 py-3 bg-[#4C92C3] hover:bg-[#3d7ea9] text-white rounded-xl text-sm font-bold transition-all active:scale-95 cursor-pointer shadow-lg shadow-[#4C92C3]/20"
-                    >
-                      Tutup Riwayat
-                    </button>
-                  </div>
-                </div>
-              ) : (
-                <>
-                  {/* ─── STATUS: AKTIF ─── */}
-                  {selectedIntegration.status === 'Aktif' && (
-                    <>
-                      {/* Info table */}
-                      <div className="bg-white/5 border border-white/8 rounded-2xl overflow-hidden">
-                        {[
-                          { label: 'Sinkronisasi Terakhir', value: 'Real-time (Baru saja)', valueClass: 'text-white font-mono' },
-                          { label: 'Tipe Akses', value: 'API Token (OAuth 2.0)', valueClass: 'text-white font-mono' },
-                          { label: 'Integritas Keamanan', value: '100% Terenkripsi', valueClass: 'text-green-400 font-bold' },
-                          { label: 'Latensi Koneksi', value: '18ms (Optimal)', valueClass: 'text-cyan-400 font-bold' },
-                        ].map((row, idx, arr) => (
-                          <div
-                            key={row.label}
-                            className={`flex justify-between items-center px-5 py-3.5 text-sm ${idx < arr.length - 1 ? 'border-b border-white/5' : ''}`}
-                          >
-                            <span className="text-gray-400">{row.label}</span>
-                            <span className={row.valueClass}>{row.value}</span>
+                  {/* Right Column: Activity Timeline */}
+                  <div className="space-y-5">
+                    <div className="p-5 bg-white/5 border border-white/5 rounded-2xl space-y-4 h-full">
+                      <span className="text-xs font-bold text-[#B8DDF5] tracking-wider uppercase block">Linimasa Aktivitas Terakhir</span>
+                      <div className="relative pl-6 border-l border-white/10 space-y-5">
+                        {selectedIntegration.status === 'Aktif' && (
+                          <div className="relative">
+                            <div className="absolute -left-[30px] top-1.5 w-2 h-2 rounded-full bg-green-400 border border-green-400/50 shadow-[0_0_10px_rgba(74,222,128,0.5)]" />
+                            <span className="text-xs font-bold text-green-300 block">Koneksi Dipulihkan</span>
+                            <span className="text-[10px] text-gray-400 block mt-0.5">{selectedIntegration.lastConnected}</span>
                           </div>
-                        ))}
-                      </div>
-
-                      {/* AI Insight */}
-                      <div className="p-4 bg-green-500/10 border border-green-500/25 rounded-2xl flex items-start gap-3">
-                        <ShieldCheck className="text-green-400 shrink-0 mt-0.5" size={22} />
-                        <div>
-                          <span className="text-sm text-green-300 font-bold block">AI Insight — Fraud Score: Aman</span>
-                          <span className="text-xs text-green-200/80 mt-0.5 block leading-relaxed">
-                            Semua lalu intrat data terverifikasi bersih. Tidak ada aktivitas anomali dalam 24 jam terakhir.
+                        )}
+                        
+                        <div className="relative">
+                          <div className="absolute -left-[30px] top-1.5 w-2 h-2 rounded-full bg-red-400 border border-red-400/50 shadow-[0_0_10px_rgba(248,113,113,0.5)]" />
+                          <span className="text-xs font-bold text-red-300 block">Koneksi Diputuskan oleh User</span>
+                          <span className="text-[10px] text-gray-400 block mt-0.5">
+                            {selectedIntegration.status === 'Aktif' 
+                              ? 'Beberapa hari sebelum koneksi dipulihkan' 
+                              : selectedIntegration.lastConnected !== 'Terputus' 
+                                ? selectedIntegration.lastConnected 
+                                : 'Riwayat Audit Terakhir'}
                           </span>
                         </div>
-                      </div>
 
-                      {/* Actions */}
-                      <div className="pt-4 border-t border-white/10 flex justify-end gap-3">
-                        <button
-                          disabled={actionLoading}
-                          onClick={closeModal}
-                          className="px-6 py-3 bg-white/5 hover:bg-white/10 text-white rounded-xl text-sm font-bold transition-all cursor-pointer disabled:opacity-50"
-                        >
-                          Kembali
-                        </button>
-                        <button
-                          disabled={actionLoading}
-                          onClick={handleDisconnect}
-                          className="px-6 py-3 bg-red-500/15 hover:bg-red-500/30 text-red-300 rounded-xl text-sm font-bold border border-red-500/30 flex items-center gap-2 transition-all active:scale-95 disabled:opacity-50 cursor-pointer"
-                        >
-                          {actionLoading
-                            ? <RefreshCw size={15} className="animate-spin" />
-                            : <WifiOff size={15} />
-                          }
-                          Putuskan Koneksi API
-                        </button>
-                      </div>
-                    </>
-                  )}
-
-                  {/* ─── STATUS: PERINGATAN ─── */}
-                  {selectedIntegration.status === 'Peringatan' && (
-                    <>
-                      <div className="p-5 bg-yellow-500/10 border border-yellow-500/25 rounded-2xl flex gap-4">
-                        <AlertTriangle className="text-yellow-400 shrink-0 mt-0.5" size={26} />
-                        <div>
-                          <h4 className="text-base font-bold text-yellow-300">Deteksi Gangguan Integrasi</h4>
-                          <p className="text-sm text-gray-300 mt-1.5 leading-relaxed">
-                            Galat: <strong className="text-yellow-200">Token API kedaluwarsa.</strong> Sistem tidak dapat memperbarui log transaksi secara real-time. Lakukan sinkronisasi ulang untuk memperbarui token secara otomatis.
-                          </p>
+                        <div className="relative">
+                          <div className="absolute -left-[30px] top-1.5 w-2 h-2 rounded-full bg-green-400" />
+                          <span className="text-xs font-bold text-gray-300 block">Integrasi Awal Dikonfigurasi</span>
+                          <span className="text-[10px] text-gray-400 block mt-0.5">{selectedIntegration.initialConnected}</span>
                         </div>
                       </div>
+                    </div>
+                  </div>
+                </div>
 
-                      <div className="bg-white/5 border border-white/8 rounded-2xl overflow-hidden">
-                        {[
-                          { label: 'Sinkronisasi Terakhir', value: '2 jam lalu', valueClass: 'text-yellow-400 font-mono' },
-                          { label: 'Kode Error', value: 'ERR_TOKEN_EXPIRED', valueClass: 'text-red-400 font-mono text-xs' },
-                        ].map((row, idx, arr) => (
-                          <div key={row.label} className={`flex justify-between items-center px-5 py-3.5 text-sm ${idx < arr.length - 1 ? 'border-b border-white/5' : ''}`}>
-                            <span className="text-gray-400">{row.label}</span>
-                            <span className={row.valueClass}>{row.value}</span>
-                          </div>
-                        ))}
-                      </div>
-
-                      <div className="pt-4 border-t border-white/10 flex justify-end gap-3">
-                        <button
-                          disabled={actionLoading}
-                          onClick={closeModal}
-                          className="px-6 py-3 bg-white/5 hover:bg-white/10 text-white rounded-xl text-sm font-bold transition-all cursor-pointer disabled:opacity-50"
-                        >
-                          Batal
-                        </button>
-                        <button
-                          disabled={actionLoading}
-                          onClick={handleSyncAgain}
-                          className="px-6 py-3 bg-[#4C92C3] hover:bg-[#3d7ea9] text-white rounded-xl text-sm font-bold flex items-center gap-2 transition-all active:scale-95 disabled:opacity-50 cursor-pointer shadow-lg shadow-[#4C92C3]/20"
-                        >
-                          {actionLoading
-                            ? <RefreshCw size={15} className="animate-spin" />
-                            : <RefreshCw size={15} />
-                          }
-                          {actionLoading ? 'Menyinkronkan...' : 'Sinkronisasi Ulang'}
-                        </button>
-                      </div>
-                    </>
-                  )}
-
-                  {/* ─── STATUS: TERPUTUS ─── */}
-                  {selectedIntegration.status === 'Terputus' && (
-                    <form onSubmit={handleReconnect} className="space-y-5">
-                      <div className="p-5 bg-red-500/10 border border-red-500/20 rounded-2xl flex gap-4">
-                        <WifiOff className="text-red-400 shrink-0 mt-0.5" size={24} />
-                        <div>
-                          <h4 className="text-base font-bold text-red-300">Koneksi Terputus</h4>
-                          <p className="text-sm text-gray-300 mt-1 leading-relaxed">
-                            Sistem ini tidak aktif. Masukkan kredensial baru untuk menghubungkan kembali dan melanjutkan sinkronisasi data secara real-time.
-                          </p>
-                        </div>
-                      </div>
-
-                      {formError && (
-                        <div className="p-4 bg-red-500/15 border border-red-500/40 rounded-xl text-red-200 text-sm font-semibold text-center">
-                          {formError}
-                        </div>
-                      )}
-
-                      {/* Demo Autopopulate Helper */}
-                      <div className="p-4 bg-[#4C92C3]/15 border border-[#4C92C3]/30 rounded-2xl flex items-center justify-between gap-3">
-                        <div className="text-xs text-gray-300 leading-normal">
-                          <span className="font-bold text-[#B8DDF5] block mb-0.5">💡 Butuh Kredensial Demo?</span>
-                          Gunakan kredensial pengujian simulasi otomatis secara instan.
-                        </div>
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setApiToken('sk_live_51NxShopeeKey9988_cyber_demo');
-                            setClientId('client_cyber_prod_kayla23');
-                            setFormError('');
-                          }}
-                          className="px-4 py-2 bg-[#4C92C3] hover:bg-[#3d7ea9] text-white rounded-xl text-xs font-bold transition-all active:scale-95 cursor-pointer shrink-0 shadow-lg shadow-[#4C92C3]/20"
-                        >
-                          Gunakan Kredensial Demo
-                        </button>
-                      </div>
-
-                      <div className="space-y-4">
-                        <div className="space-y-1.5">
-                          <label className="text-xs font-bold text-gray-300 block tracking-wide uppercase">Token API Baru</label>
-                          <div className="flex items-center bg-white/5 border border-white/10 rounded-xl px-4 py-3.5 gap-3 focus-within:ring-2 ring-[#4C92C3]/50 focus-within:border-[#4C92C3]/50 transition-all">
-                            <Key className="text-[#B8DDF5] shrink-0" size={16} />
-                            <input
-                              type="password"
-                              value={apiToken}
-                              onChange={(e) => setApiToken(e.target.value)}
-                              placeholder="sk_live_51Nx..."
-                              className="bg-transparent w-full outline-none text-white text-sm placeholder:text-white/25"
-                            />
-                          </div>
-                        </div>
-
-                        <div className="space-y-1.5">
-                          <label className="text-xs font-bold text-gray-300 block tracking-wide uppercase">Client ID / Username</label>
-                          <div className="flex items-center bg-white/5 border border-white/10 rounded-xl px-4 py-3.5 gap-3 focus-within:ring-2 ring-[#4C92C3]/50 focus-within:border-[#4C92C3]/50 transition-all">
-                            <Link2 className="text-[#B8DDF5] shrink-0" size={16} />
-                            <input
-                              type="text"
-                              value={clientId}
-                              onChange={(e) => setClientId(e.target.value)}
-                              placeholder="client_cyber_prod_..."
-                              className="bg-transparent w-full outline-none text-white text-sm placeholder:text-white/25"
-                            />
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="pt-4 border-t border-white/10 flex justify-end gap-3">
-                        <button
-                          type="button"
-                          disabled={actionLoading}
-                          onClick={closeModal}
-                          className="px-6 py-3 bg-white/5 hover:bg-white/10 text-white rounded-xl text-sm font-bold transition-all cursor-pointer disabled:opacity-50"
-                        >
-                          Batal
-                        </button>
-                        <button
-                          type="submit"
-                          disabled={actionLoading}
-                          className="px-6 py-3 bg-[#4C92C3] hover:bg-[#3d7ea9] text-white rounded-xl text-sm font-bold flex items-center gap-2 transition-all active:scale-95 disabled:opacity-50 cursor-pointer shadow-lg shadow-[#4C92C3]/20"
-                        >
-                          {actionLoading
-                            ? <RefreshCw size={15} className="animate-spin" />
-                            : <PlugZap size={15} />
-                          }
-                          {actionLoading ? 'Menghubungkan...' : 'Hubungkan Kembali'}
-                        </button>
-                      </div>
-                    </form>
-                  )}
-                </>
-              )}
+                {/* Close Action - full width */}
+                <div className="pt-4 border-t border-white/10 flex justify-end">
+                  <button
+                    onClick={closeModal}
+                    className="px-6 py-3 bg-[#4C92C3] hover:bg-[#3d7ea9] text-white rounded-xl text-sm font-bold transition-all active:scale-95 cursor-pointer shadow-lg shadow-[#4C92C3]/20"
+                  >
+                    Tutup Riwayat
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         </div>

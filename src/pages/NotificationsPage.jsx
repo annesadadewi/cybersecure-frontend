@@ -64,15 +64,23 @@ const NotificationsPage = () => {
     cancelled: 'Transaksi Dibatalkan',
   };
 
-  const isNotificationUnread = (n) =>
-    n.status === 'unread' || n.unread === true || n.is_read === false;
+  const isNotificationUnread = (n) => {
+    if (!n) return false;
+    // Cek secara menyeluruh semua kemungkinan properti status dari API backend
+    return n.status === 'unread' || n.unread === true || n.is_read === false || n.is_read === 0 || n.is_read === '0';
+  };
 
+  // Memastikan yang UNREAD (belum dibaca) di atas, yang READ (sudah dibaca) PASTI ke bawah
   const sortNotifications = (list) =>
     [...list].sort((a, b) => {
       const aUnread = isNotificationUnread(a);
       const bUnread = isNotificationUnread(b);
-      if (aUnread !== bUnread) return aUnread ? -1 : 1;
-      return new Date(b.occurred_at) - new Date(a.occurred_at);
+      
+      if (aUnread && !bUnread) return -1;
+      if (!aUnread && bUnread) return 1;
+      
+      // Jika statusnya sama, urutkan berdasarkan waktu paling baru
+      return new Date(b.occurred_at || b.created_at) - new Date(a.occurred_at || a.created_at);
     });
 
   const markAsReadLocally = (n) => ({
@@ -109,10 +117,12 @@ const NotificationsPage = () => {
   const handleBulkMarkRead = async () => {
     if (selectedIds.length === 0) return;
     const markedIds = [...selectedIds];
-    // Hitung unread yang benar-benar unread dari yang dipilih
+    
     const unreadMarkedCount = notifications.filter(
       (n) => markedIds.includes(n.id) && isNotificationUnread(n)
     ).length;
+
+    // Langkah Efek Instan: Ubah status secara lokal agar langsung amblas ke bawah dan berubah abu-abu tanpa nunggu response API
     setNotifications((prev) =>
       sortNotifications(
         prev.map((n) => (markedIds.includes(n.id) ? markAsReadLocally(n) : n))
@@ -121,6 +131,7 @@ const NotificationsPage = () => {
     setUnreadCount((prev) => Math.max(0, prev - unreadMarkedCount));
     setSelectedIds([]);
     setConfirmOpen(false);
+
     try {
       const data = await notificationService.bulkMarkRead(markedIds, filter, 50);
       if (data.notifications) {
@@ -228,7 +239,7 @@ const NotificationsPage = () => {
                 className={`flex items-stretch gap-0 rounded-xl sm:rounded-2xl border transition-all overflow-hidden ${
                   isUnread
                     ? 'bg-white/8 border-[#69C3FF]/25 shadow-[0_0_20px_rgba(105,195,255,0.08)]'
-                    : 'bg-white/[0.02] border-white/5 opacity-50'
+                    : 'bg-slate-900/40 border-white/5' // Diubah dari opacity-50 menjadi abu-abu gelap solid berlatar transparan
                 }`}
               >
                 <div className="flex flex-1 items-center gap-4 p-3.5 px-4 min-w-0">
@@ -239,18 +250,18 @@ const NotificationsPage = () => {
                         : 'bg-white/[0.02] border-white/10'
                     }`}
                   >
-                    <Icon size={20} className={isUnread ? style.text : 'text-white/30'} />
+                    <Icon size={20} className={isUnread ? style.text : 'text-slate-500'} />
                   </div>
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-2 flex-wrap">
-                      <h3 className={`text-sm font-bold ${isUnread ? style.text : 'text-white/40'}`}>{notif.type}</h3>
+                      <h3 className={`text-sm font-bold ${isUnread ? style.text : 'text-slate-400'}`}>{notif.type}</h3>
                       {isUnread && (
                         <span className="text-[9px] uppercase font-black px-1.5 py-0.5 rounded bg-[#4AA9FF]/20 text-[#4AA9FF]">
                           Baru
                         </span>
                       )}
                     </div>
-                    <p className={`text-xs sm:text-sm font-semibold truncate mt-0.5 ${isUnread ? 'text-white/80' : 'text-white/30'}`}>
+                    <p className={`text-xs sm:text-sm font-semibold truncate mt-0.5 ${isUnread ? 'text-white/80' : 'text-slate-400/80'}`}>
                       {notif.message}
                     </p>
                     {notif.amount != null && notif.amount > 0 && (
@@ -258,7 +269,7 @@ const NotificationsPage = () => {
                         className={`text-xs font-black mt-1 ${
                           isUnread
                             ? (notif.is_refund ? 'text-red-400' : 'text-green-400')
-                            : 'text-white/30'
+                            : 'text-slate-500'
                         }`}
                       >
                         {notif.is_refund ? '-' : '+'}
@@ -266,7 +277,7 @@ const NotificationsPage = () => {
                       </p>
                     )}
                   </div>
-                  <span className="text-xs text-white/40 font-bold shrink-0 hidden sm:block">{notif.time_ago}</span>
+                  <span className={`text-xs font-bold shrink-0 hidden sm:block ${isUnread ? 'text-white/40' : 'text-slate-500'}`}>{notif.time_ago}</span>
                 </div>
                 {isUnread ? (
                   <label

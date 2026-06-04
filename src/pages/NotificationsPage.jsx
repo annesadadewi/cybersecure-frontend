@@ -48,11 +48,9 @@ const ConfirmModal = ({ open, count, onConfirm, onCancel }) => {
   );
 };
 
-const NotificationsPage = () => {
+const NotificationsPage = ({ unreadCount, setUnreadCount, filter, setFilter }) => {
   const [notifications, setNotifications] = useState([]);
-  const [unreadCount, setUnreadCount] = useState(0);
   const [loading, setLoading] = useState(true);
-  const [filter, setFilter] = useState('all');
   const [filterOpen, setFilterOpen] = useState(false);
   const [selectedIds, setSelectedIds] = useState([]);
   const [confirmOpen, setConfirmOpen] = useState(false);
@@ -156,22 +154,17 @@ const NotificationsPage = () => {
   }
 
   return (
-    <div className="space-y-6 sm:space-y-8 animate-fadeIn">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div className="flex items-center gap-3">
-          <h2 className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-white tracking-tight">Notifikasi Transaksi</h2>
-          {unreadCount > 0 && (
-            <div className="w-6 h-6 bg-[#EF4444] rounded-full flex items-center justify-center text-white text-xs font-black shadow-lg">
-              {unreadCount}
-            </div>
-          )}
-        </div>
-        <div className="flex flex-wrap gap-2 w-full sm:w-auto items-center">
+    <div className="space-y-6 animate-fadeIn">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-10 lg:mb-12">
+        <p className="text-base sm:text-lg font-medium text-white/80">
+          Filter aktif: <span className="font-extrabold text-[#B8DDF5]">{filterLabels[filter] || 'Semua'}</span>
+        </p>
+        <div className="flex flex-wrap gap-3.5 items-center w-full md:w-auto justify-end">
           <button
             type="button"
             onClick={() => (selectedIds.length > 0 ? setConfirmOpen(true) : null)}
             disabled={selectedIds.length === 0}
-            className="flex-1 sm:flex-initial bg-[#B8DDF5]/15 text-[#B8DDF5] px-4 py-2 rounded-xl font-bold border border-[#B8DDF5]/30 hover:bg-[#B8DDF5]/25 text-xs transition-all cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
+            className="flex-1 sm:flex-initial bg-[#B8DDF5]/15 text-[#B8DDF5] px-6 py-3.5 rounded-xl font-extrabold border border-[#B8DDF5]/30 hover:bg-[#B8DDF5]/25 text-sm md:text-base transition-all cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
           >
             Tandai Sudah Dibaca {selectedIds.length > 0 ? `(${selectedIds.length})` : ''}
           </button>
@@ -180,20 +173,20 @@ const NotificationsPage = () => {
             onClick={fetchNotifications}
             disabled={loading}
             title="Refresh notifikasi"
-            className="flex items-center justify-center gap-1.5 bg-white/10 hover:bg-white/15 text-white/70 hover:text-white px-3 py-2 rounded-xl font-bold text-xs border border-white/10 transition-all cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
+            className="flex items-center justify-center gap-2 bg-white/10 hover:bg-white/15 text-white/70 hover:text-white px-5 py-3.5 rounded-xl font-extrabold text-sm md:text-base border border-white/10 transition-all cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
           >
-            <RefreshCw size={13} className={loading ? 'animate-spin' : ''} />
-            <span className="hidden sm:inline">Refresh</span>
+            <RefreshCw size={16} className={loading ? 'animate-spin' : ''} />
+            <span>Refresh</span>
           </button>
           <div className="relative flex-1 sm:flex-initial">
             <button
               type="button"
               onClick={() => setFilterOpen(!filterOpen)}
-              className="w-full sm:w-auto flex items-center justify-center gap-2 bg-[#B8DDF5] hover:bg-white text-[#1F5E88] px-4 py-2 rounded-xl font-bold text-xs shadow-lg transition-all cursor-pointer"
+              className="w-full sm:w-auto flex items-center justify-center gap-2.5 bg-[#B8DDF5] hover:bg-white text-[#1F5E88] px-6 py-3.5 rounded-xl font-extrabold text-sm md:text-base shadow-lg transition-all cursor-pointer"
             >
-              <Filter size={14} />
+              <Filter size={16} />
               Filter
-              <ChevronDown size={14} className={`transition-transform ${filterOpen ? 'rotate-180' : ''}`} />
+              <ChevronDown size={16} className={`transition-transform ${filterOpen ? 'rotate-180' : ''}`} />
             </button>
             {filterOpen && (
               <div className="absolute right-0 top-full mt-2 z-20 min-w-[240px] bg-[#1F5E88] border border-white/15 rounded-xl shadow-2xl overflow-hidden py-1">
@@ -217,8 +210,6 @@ const NotificationsPage = () => {
           </div>
         </div>
       </div>
-
-      <p className="text-xs text-white/40 -mt-4">Filter aktif: {filterLabels[filter]}</p>
 
       {notifications.length === 0 ? (
         <div className="text-center py-16 text-white/50 space-y-3">
@@ -264,7 +255,7 @@ const NotificationsPage = () => {
                     <p className={`text-xs sm:text-sm font-semibold truncate mt-0.5 ${isUnread ? 'text-white/80' : 'text-slate-400/80'}`}>
                       {notif.message}
                     </p>
-                    {notif.amount != null && notif.amount > 0 && (
+                    {notif.amount != null && notif.amount > 0 && notif.category !== 'cancelled' && (
                       <p
                         className={`text-xs font-black mt-1 ${
                           isUnread

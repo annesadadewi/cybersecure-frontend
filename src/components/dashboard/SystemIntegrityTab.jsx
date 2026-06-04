@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { theme } from '../../Theme';
 import { CheckCircle, ShieldCheck, Activity, Cpu, X, RefreshCw, Server, Zap, WifiOff } from 'lucide-react';
+import { marketplaceService } from '../../api/marketplace';
 
 const SystemIntegrityPage = () => {
   const [activeModal, setActiveModal] = useState('none'); // 'none', 'firewall', 'serverLoad'
@@ -34,6 +35,17 @@ const SystemIntegrityPage = () => {
   };
 
   const [activeCount, setActiveCount] = useState(getActiveIntegrationCount);
+  const [marketplaceCount, setMarketplaceCount] = useState(0);
+
+  // Fetch connected marketplaces from backend (sama seperti DashboardMenuPage)
+  useEffect(() => {
+    marketplaceService.getMarketplaces()
+      .then((mps) => {
+        const connected = Array.isArray(mps) ? mps.filter(mp => mp.status === 'connected').length : 0;
+        setMarketplaceCount(connected);
+      })
+      .catch(() => setMarketplaceCount(0));
+  }, []);
 
   useEffect(() => {
     const handleStorage = () => setActiveCount(getActiveIntegrationCount());
@@ -45,7 +57,7 @@ const SystemIntegrityPage = () => {
     };
   }, []);
 
-  const hasActiveIntegrations = activeCount > 0;
+  const hasActiveIntegrations = (activeCount + marketplaceCount) > 0;
   
   // States for scanner
   const [scanning, setScanning] = useState(false);

@@ -23,6 +23,8 @@ function App() {
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [booting, setBooting] = useState(true);
+  const [unreadCount, setUnreadCount] = useState(0);
+  const [notificationFilter, setNotificationFilter] = useState('all');
 
   useEffect(() => {
     // Migrate localStorage to version 3 (reset old default values)
@@ -56,8 +58,6 @@ function App() {
   };
 
   const handleLoginSuccess = (userData) => {
-    localStorage.removeItem('cybersecure_core_systems');
-    localStorage.removeItem('cybersecure_custom_integrations');
     setUser(userData);
     setIsLogin(true);
     setAuthPage('app');
@@ -75,8 +75,6 @@ function App() {
     } catch {
       localStorage.removeItem('token');
     }
-    localStorage.removeItem('cybersecure_core_systems');
-    localStorage.removeItem('cybersecure_custom_integrations');
     setUser(null);
     setIsLogin(false);
     setAuthPage('landing');
@@ -138,6 +136,8 @@ function App() {
           activeMenu={activeMenu} 
           user={user} 
           onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)} 
+          unreadCount={unreadCount}
+          notificationFilter={notificationFilter}
         />
         <div className="flex-1 overflow-y-auto px-4 sm:px-6 md:px-8 lg:px-10 pb-8 pt-6 lg:pb-10 lg:pt-8 text-white">
           {activeMenu === 'Dashboard' && <DashboardPage setActiveMenu={setActiveMenu} />}
@@ -147,7 +147,14 @@ function App() {
           {activeMenu === 'Pelajari Fitur' && <FeaturesPage />}
           {activeMenu === 'Manajemen Integrasi' && <ManajemenIntegrasiPage />}
           {activeMenu === 'Reports' && <ReportsPage />}
-          {activeMenu === 'Notifications' && <NotificationsPage />}
+          {activeMenu === 'Notifications' && (
+            <NotificationsPage 
+              unreadCount={unreadCount} 
+              setUnreadCount={setUnreadCount} 
+              filter={notificationFilter}
+              setFilter={setNotificationFilter}
+            />
+          )}
           {activeMenu === 'Settings' && (
             <SettingsPage user={user} onUserUpdate={handleUserUpdate} />
           )}

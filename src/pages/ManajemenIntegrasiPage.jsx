@@ -476,7 +476,7 @@ const ManajemenIntegrasiPage = () => {
       {/* ─── MODAL: TAMBAH INTEGRASI ─── */}
       {showAddModal && createPortal(
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm animate-fadeIn">
-          <div className="bg-gradient-to-b from-[#0f2d45] to-[#0a1f30] border border-white/15 rounded-3xl w-full max-w-lg p-6 sm:p-8 shadow-[0_30px_80px_rgba(0,0,0,0.7)] relative animate-scaleUp overflow-hidden max-h-[90vh] flex flex-col">
+          <div className="bg-gradient-to-b from-[#0f2d45] to-[#0a1f30] border border-white/15 rounded-3xl w-full max-w-2xl p-6 sm:p-8 shadow-[0_30px_80px_rgba(0,0,0,0.7)] relative animate-scaleUp overflow-hidden max-h-[90vh] flex flex-col">
             <div className="flex justify-between items-start pb-4 border-b border-white/10 shrink-0">
               <div>
                 <h3 className="text-xl sm:text-2xl font-extrabold text-white leading-tight">

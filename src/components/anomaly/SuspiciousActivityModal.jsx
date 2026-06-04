@@ -17,24 +17,19 @@ const SuspiciousActivityModal = ({ open, onClose }) => {
   const [incidentStatus, setIncidentStatus] = useState('Open');
   const [loading, setLoading] = useState(false);
 
-  // Filter securityIncidents to show only "Akses File Sensitif Berulang" row
-  const displayedSecurityIncidents = securityIncidents.filter(
-    (inc) => inc.id === 'sec-8' || inc.activity === 'Akses File Sensitif Berulang'
-  );
-  
-  const finalSecurityIncidents = displayedSecurityIncidents.length > 0 
-    ? displayedSecurityIncidents 
-    : securityIncidents.length > 0 
-      ? [securityIncidents.find(i => i.id === 'sec-8' || i.activity === 'Akses File Sensitif Berulang') || securityIncidents[0]] 
-      : [{
-          id: 'sec-8',
-          time: '02:12:33 WIB',
-          activity: 'Akses File Sensitif Berulang',
-          location: '192.168.1.55 (Internal)',
-          recommendation: 'Saran AI: Audit hak akses role dan batasi permission folder /config.',
-          risk_level: 'low',
-          status: 'Open'
-        }];
+  // Backend hanya mengembalikan sec-8, tapi kita tetap sediakan fallback
+  // jika API error / data kosong
+  const finalSecurityIncidents = securityIncidents.length > 0
+    ? securityIncidents
+    : [{
+        id: 'sec-8',
+        time: '02:12:33 WIB',
+        activity: 'Akses File Sensitif Berulang',
+        location: '192.168.1.55 (Internal)',
+        recommendation: 'Saran AI: Audit hak akses role dan batasi permission folder /config.',
+        risk_level: 'low',
+        status: 'Open'
+      }];
 
   useEffect(() => {
     if (!open) return;
